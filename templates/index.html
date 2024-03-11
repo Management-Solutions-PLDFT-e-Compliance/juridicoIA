@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solução de IA Jurídico</title>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="header1">
+        <img src="{{ url_for('static', filename='assets/logoMS.png') }}" alt="MSSolutions" class="MSlogoHome" onclick="redirecionarParaHome()">
+        <h1 class="a comprimentos">Olá Raul!</h1>
+        <button class="botaoHeader botaoSair botaoSairHeaderPrincipal botaoProCantoDireito" onclick="redirecionarParaLogin()">
+          <img src="{{ url_for('static', filename='assets/exitIcon.png') }}" alt="Descrição da Imagem" height="25px" width="25px">
+          SAIR
+        </button>
+    </header>
+
+    <div class="card">
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" accept=".pdf"  hidden onchange="updateFileName()">
+            <label for="fileInput" id="fileInputLabel">Selecione um processo</label>
+            <input type="submit" class="upload-btn" value="Anexar" onclick="submitForm()">
+        </form>
+        <div class="titulos">
+            <h2>Referência do Processo: {{ numeroPaginas }}</h2>
+            <div class="container">
+            <div class="juiz"><p><strong>Juiz: </strong>{{ juiz }}</p></div>
+            <div class="autor"><p><strong>Autor:</strong> {{ autor }}</p></div>
+            <div class="reu"><p><strong>Réu:</strong> {{ reu }}</p></div>
+            <div class="dataAbertura"><p><strong>Data de Abertura:</strong> {{ dataAbertura }}</p></div>
+            <div class="advogadosAutor"><p><strong>Advogados do Autor:</strong> {{ advogadosAutor }}</p></div>
+            <div class="advogadosReu"><p><strong>Advogados do Réu:</strong> {{ advogadosReu }}</p></div>
+            <div class="indenizacao"><p><strong>Importância da Indenização:</strong> {{ indenizacao }}</p></div>
+            <div class="instancia"><p><strong>Instancia:</strong> {{ instancia }}</p></div>
+            <div class="comarca"><p><strong>Comarca:</strong> {{ comarca }}</p></div>
+            <div class="vara"><p><strong>Vara:</strong> {{ vara }}</p></div>
+            <div class="produto"><p><strong>Produto:</strong> {{ produto }}</p></div>
+            <div class="situacaoFinal"><p><strong>Status:</strong> {{ situacaoFinal }}</p></div>
+            
+            
+            <div class="ultimaAtualizacao"><p><strong>Última atualização:</strong> {{ ultimaAtualizacao }}</p></div>
+            <div class="tipoReclamacao"><p><strong>Tipo da reclamação:</strong> {{ tipoReclamacao }}</p></div>
+            </div>
+        <hr>
+            <div class="juizQuantidade"><p><strong>Quantidade Juiz:</strong> {{ juizQuantidade }}</p></div>
+            <div class="clienteQuantidade"><p><strong>Quantidade cliente:</strong> {{ clienteQuantidade }}</p></div>
+            <div class="contotribunalQuantidaderno"><p><strong>Quantidade tribunal:</strong> {{ tribunalQuantidade }}</p></div>
+    
+        <hr>
+        <div class="iaGenerativa">
+            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <div class="tamanhoSintese">
+                <P>Síntese:</p>
+                <button>Curta</button>
+                <button>Média</button>
+                <button>Longa</button>
+            </div>
+            <div class="perguntaResumo">
+                <button id="perguntar">Perguntar</button>
+                <button id="resumir">Resumir</button>
+            </div>
+        </div>
+        <div class="respostaIa">
+            <div hidden id="resumoProcesso">{{ resumoProcesso }}</div>
+            <div id="typed-text-container" class="typed-text"></div>
+            
+            <!-- <div class="textoContainer"> -->
+                <!-- <textarea name="" id="" cols="30" rows="10">{{resumoProcesso}}</textarea> -->
+            </div>
+        </div>
+        <div class="precicaoIA">
+            <p><strong>Acurácia 97%</strong></p>
+            
+            <div class="satisfacao">
+            <p><strong>Satisfação:</strong></p>
+            <button id="likeBtn" onclick="toggleLike()" class="active"><img id="likeImg" src="/static/assets/like.png" alt="Like"></button>
+            <button id="dislikeBtn" onclick="toggleDislike()" class="active"><img id="dislikeImg" src="/static/assets/dislike.png" alt="Dislike"></button>
+            </div>
+            
+            <button id="geraDefesa">Gerar defesa</button>
+            <button id="download">Download</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

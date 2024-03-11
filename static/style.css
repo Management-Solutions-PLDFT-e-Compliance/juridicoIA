@@ -1,0 +1,354 @@
+*{
+    font-family: "Poppins", sans-serif;
+}
+.header1  {
+    position: fixed;
+    width: 99.2%;
+    height: 10vh;
+    background-color: #041f4c;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    margin-top: 0px;
+    border-radius: 12px;
+    /* justify-content: space-between; */
+  }
+
+  .botaoHeader {
+    background-color: #041f4c;
+    border: solid 1px #041f4c;
+    border-radius: 5px;
+    height: 50px;
+    width: 80px;
+    font-size: 20px;
+    color: white;
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    align-items: center;
+  }
+
+  .MSlogoHome {
+    width: 180px;
+    height: 80px;
+  }
+
+  .comprimentos{
+    margin-left: 73%;
+  }
+  
+  .botaoSair{
+    font-weight: bolder;
+    cursor: pointer;
+  }
+
+  .botaoSairHeaderPrincipal{
+    margin-left: 85px;
+  }
+
+  h1 {
+    font-size: 24px;
+    color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+body{
+    background-color: #F2F2F7;
+}
+
+.card {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 20px;
+    margin: 20px;
+    margin-top: 11vh; /* Espaçamento do topo */
+    height: 83%;
+    width: 95%;
+}
+.titulos {
+    font-family: sans-serif;
+}
+
+.titulos > button{
+    /* display: flex; */
+    background-color: #041f4c;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px #888888;
+    right: 50px;
+    height: 35px;
+    width: 200px;
+    top: 13vh;
+    position: fixed;
+    /* text-align: center; */
+    /* align-items: center; */
+    color: white;
+    font-weight: bold;
+}
+
+.titulos > h2{
+    color: #000;
+    font-size: 20px;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+  
+  }
+  
+  .titulos > h5 {
+    color: #c2c2c2;
+    font-size: 18px;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+  }
+
+textarea{
+    font-family: "Poppins", sans-serif;
+    height: 70px;
+    width: 1400px;
+    resize: none;
+    border-radius: 12px;
+    background-color: #F2F2F7;
+    padding: 5px;
+    border-color: lightgray;
+}
+
+br{
+    color: lightgray;
+}
+
+.iaGenerativa{
+    background-color: white;
+    display: flex;
+    
+}
+.respostaIa{
+    margin-top: 15px;
+}
+
+.tamanhoSintese > button{
+    background-color: #041f4c;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px #888888;
+    width: 55px;
+    height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.tamanhoSintese{
+    align-items: center;
+    width: 180px;
+    height: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+
+.iaGenerativa #resumir{
+    /* display: flex; */
+    background-color: #041f4c;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px #888888;
+    /* right: 50px;
+    top: 550px; */
+    height: 35px;
+    width: 200px;
+
+    /* text-align: center; */
+    /* align-items: center; */
+    color: white;
+    font-weight: bold;
+    /* margin-bottom: 25px; */
+}
+.iaGenerativa #perguntar{
+    /* display: flex; */
+    background-color: #041f4c;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px #888888;
+    /* right: 50px;
+    height: 35px; */
+    width: 200px;
+    height: 35px;
+    /* text-align: center; */
+    /* align-items: center; */
+    color: white;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.perguntaResumo{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+    flex-direction: column;
+}
+
+.respostaIa {
+    height: 290px;
+    border: lightgray 1.5px solid;
+    border-radius: 12px;
+    padding: 5px;
+}
+
+.precicaoIA{
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 10px; /* Espaçamento entre as células */
+    max-width: 1860px;
+    align-items: center;
+    
+}
+
+.precicaoIA > button{
+    width: 45px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+
+}
+
+.active {
+    border: none;
+    background: none;
+}
+
+.precicaoIA > p {
+    max-width: 900px;
+    width: fit-content;
+    margin-right: 5px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr)); /* Quatro colunas flexíveis */
+    gap: 5px; /* Espaçamento entre as células */
+    max-width: 1860px; /* Define a largura máxima */
+}
+
+.container > div {
+    border-radius: 12px;
+    border: lightgray 1.5px solid;
+    padding: 1px; /* Espaçamento interno */
+    padding-left: 5px;
+    padding-right: 5px;
+    /* width: fit-content; */
+}
+.container > p {
+    border-radius: 12px;
+    border: lightgray 1.5px solid;
+    padding: 1px; /* Espaçamento interno */
+    padding-left: 5px;
+    padding-right: 5px;
+    /* width: fit-content; */
+}
+
+
+
+.dataAbertura {
+    /* width: fit-content; */
+    max-width: 220px;
+}
+.ultimaAtualizacao {
+    max-width: 230px;
+}
+
+.indenizacao{
+    max-width: 360px;
+}
+
+.situacaoFinal{
+    max-width: 150px;
+}
+
+/* .produto{
+    max-width: 230px;
+} */
+
+
+
+
+.tipoReclamacao {
+    grid-column: 1 / span 5; /* Ocupa quatro colunas */
+}
+
+/* Estilo para o botão de upload */
+.upload-btn {
+    background-color: #041f4c; /* Cor de fundo verde */
+    color: white; /* Cor do texto branco */
+    padding: 10px 20px; /* Preenchimento interno */
+    font-size: 16px; /* Tamanho da fonte */
+    font-weight: bold;
+    border: none; /* Sem borda */
+    cursor: pointer; /* Cursor de apontar */
+    border-radius: 12px; /* Borda arredondada */
+    box-shadow: 2px 2px 2px #888888;
+    position: fixed;
+    right: 40px;
+    height: 40px;
+}
+
+#fileInputLabel{
+    position: fixed;
+    right: 140px;
+    top: 147.5px;
+    cursor: pointer;
+    border: lightgray 1.5px solid;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* Estilo para o botão de upload quando o mouse passa por cima */
+.upload-btn:hover {
+    background-color: #041f4c; /* Cor de fundo mais escura quando o mouse passa por cima */
+}
+
+/* Estilo para o botão de upload quando pressionado */
+.upload-btn:active {
+    background-color: #041f4c; /* Cor de fundo mais escura quando o botão é pressionado */
+}
+
+#geraDefesa, #download{
+    background-color: #041f4c;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px #888888;
+    width: 200px;
+    height: 35px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#download{
+    grid-column: 8;
+}
+#geraDefesa{
+    grid-column: 7;
+}
+.satisfacao{
+    grid-column: 6;
+}
+
+
+
+
