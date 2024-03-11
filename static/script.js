@@ -32,3 +32,19 @@ function toggleDislike() {
     dislikeImg.src = dislikeImg.src.includes("deslikeAtivo.png") ? "/static/assets/dislike.png" : "/static/assets/dislikeAtivo.png";
     likeImg.src = "/static/assets/like.png";
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('perguntar').addEventListener('click', function() {
+        var textoPergunta = document.getElementById('texto').value;
+        // Envie o texto para o Flask usando AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log('Texto enviado com sucesso!');
+            }
+        };
+        xhr.send('texto=' + encodeURIComponent(textoPergunta));
+    });
+});

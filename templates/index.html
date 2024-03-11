@@ -18,44 +18,117 @@
     </header>
 
     <div class="card">
-        <form id="uploadForm" method="post" enctype="multipart/form-data">
+        <form action="/resposta" id="uploadForm" method="post" enctype="multipart/form-data">
             <input type="file" name="file" id="fileInput" accept=".pdf"  hidden onchange="updateFileName()">
             <label for="fileInput" id="fileInputLabel">Selecione um processo</label>
             <input type="submit" class="upload-btn" value="Anexar" onclick="submitForm()">
         </form>
         <div class="titulos">
-            <h2>Referência do Processo: {{ numeroPaginas }}</h2>
+            <h2>Referência do Processo: {{ resul_nproc }}</h2>
+            <hr>
+
+            <div class="cabecalho">
+                <div class="brick">
+                    <p class="cabecalho-label">Autor:</p>
+                    <p class="cabecalho-valor">{{ resul_autor }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Réu:</p>
+                    <p class="cabecalho-valor">{{ resul_reu }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Advogados Autor:</p>
+                    <p class="cabecalho-valor">{{ resul_advautor }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Advogados Réu:</p>
+                    <p class="cabecalho-valor">{{ resul_advreu }}</p>
+                </div>
+            </div>
+            <div class="cabecalho">
+                <div class="brick">
+                    <p class="cabecalho-label">Data Abertura:</p>
+                    <p class="cabecalho-valor">{{ resul_dtaber }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Ultima Atualização:</p>
+                    <p class="cabecalho-valor">{{ resul_dtatu }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Indenização:</p>
+                    <p class="cabecalho-valor">{{ resul_inden }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Produto:</p>
+                    <p class="cabecalho-valor">{{ produto }}</p>
+                </div>
+            </div>
+            <div class="cabecalho">
+                <div class="brick">
+                    <p class="cabecalho-label">Status:</p>
+                    <p class="cabecalho-valor">{{ resul_status }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Vara:</p>
+                    <p class="cabecalho-valor">{{ resul_vara }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Instância:</p>
+                    <p class="cabecalho-valor">{{ resul_inst }}</p>
+                </div>
+                <div class="brick">
+                    <p class="cabecalho-label">Comarca:</p>
+                    <p class="cabecalho-valor">{{ resul_comar }}</p>
+                </div>
+            </div>
+            <div class="cabecalho-baixo">
+                <div class="brick">
+                    <p class="cabecalho-label">Juiz:</p>
+                    <p class="cabecalho-valor">{{ resul_juiz }}</p>
+                </div>
+                <div class="brick-baixo">
+                    <p class="cabecalho-label">Tipo Reclamação:</p>
+                    <p class="cabecalho-valor-baixo">{{ tipoReclamacao }}</p>
+                </div>
+            </div>
+
+<!--             
             <div class="container">
-            <div class="juiz"><p><strong>Juiz: </strong>{{ juiz }}</p></div>
-            <div class="autor"><p><strong>Autor:</strong> {{ autor }}</p></div>
-            <div class="reu"><p><strong>Réu:</strong> {{ reu }}</p></div>
-            <div class="dataAbertura"><p><strong>Data de Abertura:</strong> {{ dataAbertura }}</p></div>
-            <div class="advogadosAutor"><p><strong>Advogados do Autor:</strong> {{ advogadosAutor }}</p></div>
-            <div class="advogadosReu"><p><strong>Advogados do Réu:</strong> {{ advogadosReu }}</p></div>
-            <div class="indenizacao"><p><strong>Importância da Indenização:</strong> {{ indenizacao }}</p></div>
-            <div class="instancia"><p><strong>Instancia:</strong> {{ instancia }}</p></div>
-            <div class="comarca"><p><strong>Comarca:</strong> {{ comarca }}</p></div>
-            <div class="vara"><p><strong>Vara:</strong> {{ vara }}</p></div>
+            <div class="juiz"><p><strong>Juiz: </strong>{{ resul_juiz }}</p></div>
+            <div class="autor"><p><strong>Autor:</strong> {{ resul_autor }}</p></div>
+            <div class="reu"><p><strong>Réu:</strong> {{ resul_reu }}</p></div>
+            <div class="dataAbertura"><p><strong>Data de Abertura:</strong> {{ resul_dtaber }}</p></div>
+            <div class="advogadosAutor"><p><strong>Advogados do Autor:</strong> {{ resul_advautor }}</p></div>
+            <div class="advogadosReu"><p><strong>Advogados do Réu:</strong> {{ resul_advreu }}</p></div>
+            <div class="indenizacao"><p><strong>Importância da Indenização:</strong> {{ resul_inden }}</p></div>
+            <div class="instancia"><p><strong>Instancia:</strong> {{ resul_inst }}</p></div>
+            <div class="comarca"><p><strong>Comarca:</strong> {{ resul_comar }}</p></div>
+            <div class="vara"><p><strong>Vara:</strong> {{ resul_vara }}</p></div>
             <div class="produto"><p><strong>Produto:</strong> {{ produto }}</p></div>
-            <div class="situacaoFinal"><p><strong>Status:</strong> {{ situacaoFinal }}</p></div>
+            <div class="situacaoFinal"><p><strong>Status:</strong> {{ resul_status }}</p></div>
             
             
-            <div class="ultimaAtualizacao"><p><strong>Última atualização:</strong> {{ ultimaAtualizacao }}</p></div>
+            <div class="ultimaAtualizacao"><p><strong>Última atualização:</strong> {{ resul_dtatu }}</p></div>
             <div class="tipoReclamacao"><p><strong>Tipo da reclamação:</strong> {{ tipoReclamacao }}</p></div>
+            </div> -->
+        <hr>
+            <div class="dashboard">
+                <div class="juizQuantidade"><p><strong>Nº de casos Juiz</strong></p> {{ juizQuantidade }}</div>
+                <div class="clienteQuantidade"><p><strong>Nº de casos cliente</strong></p>  {{ clienteQuantidade }}</div>
+                <div class="contotribunalQuantidaderno"><p><strong>Nº de casos tribunal</strong></p> {{ tribunalQuantidade }}</div>
             </div>
         <hr>
-            <div class="juizQuantidade"><p><strong>Quantidade Juiz:</strong> {{ juizQuantidade }}</p></div>
-            <div class="clienteQuantidade"><p><strong>Quantidade cliente:</strong> {{ clienteQuantidade }}</p></div>
-            <div class="contotribunalQuantidaderno"><p><strong>Quantidade tribunal:</strong> {{ tribunalQuantidade }}</p></div>
-    
-        <hr>
         <div class="iaGenerativa">
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <form action="/" method="post">
+                <textarea name="texto" id="texto" cols="30" rows="10"></textarea><br>
+                <!-- <button type="submit">Enviar</button> -->
+            </form>
+
             <div class="tamanhoSintese">
-                <P>Síntese:</p>
-                <button>Curta</button>
-                <button>Média</button>
-                <button>Longa</button>
+                <P><strong>Síntese:</strong></p>
+                    <button class="btn-sintese">Curta</button>
+                    <button class="btn-sintese">Média</button>
+                    <button class="btn-sintese">Longa</button>
             </div>
             <div class="perguntaResumo">
                 <button id="perguntar">Perguntar</button>
@@ -63,7 +136,7 @@
             </div>
         </div>
         <div class="respostaIa">
-            <div hidden id="resumoProcesso">{{ resumoProcesso }}</div>
+            <div hidden id="resumoProcesso">{{ sintese }}</div>
             <div id="typed-text-container" class="typed-text"></div>
             
             <!-- <div class="textoContainer"> -->
@@ -71,7 +144,7 @@
             </div>
         </div>
         <div class="precicaoIA">
-            <p><strong>Acurácia 97%</strong></p>
+            <p><strong>Acurácia {{ acuracia }}</strong></p>
             
             <div class="satisfacao">
             <p><strong>Satisfação:</strong></p>
