@@ -28,12 +28,12 @@ def gerar_resposta_consolidada(objetivo_final):
             resposta += chunk.choices[0].delta.content
     return resposta
 
-def get_name_from_page_count(page_count):
-    if page_count == 94:
+def get_name_from_page_count(filename):
+    if filename == "94pag.pdf":
         return "0022701-03.2020.8.05.0110"
-    elif page_count == 61:
+    elif filename == "61pag.pdf":
         return "0052211-83.2020.8.06.0029 "
-    elif page_count == 120:
+    elif filename == "120pag.pdf":
         return "0001242-24.2021.8.05.0137"
     else:
         return "Processo inválido"
@@ -57,13 +57,8 @@ def upload():
         return "Nenhum arquivo selecionado"
 
     if pdf_file:
-        pdf_reader = PdfReader(pdf_file)
-        page_count = len(pdf_reader.pages)
-        num_processo = get_name_from_page_count(page_count)
-
-        
-
-
+        filename = pdf_file.filename
+        num_processo = get_name_from_page_count(filename)
 
         pergunta = "Como as leis aplicáveis influenciam o caso?"
         tamanho_resposta = "300"
