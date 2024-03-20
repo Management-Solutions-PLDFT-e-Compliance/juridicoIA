@@ -18,45 +18,53 @@
     </header>
 
     <div class="card">
-        <form action="/resposta" id="uploadForm" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" id="fileInput" accept=".pdf"  hidden onchange="updateFileName()">
+        <div style="background-color: white;">
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="pdf_file" id="fileInput" accept=".pdf" required hidden>
             <label for="fileInput" id="fileInputLabel">Selecione um processo</label>
-            <input type="submit" class="upload-btn" value="Anexar" onclick="submitForm()">
+            <input type="submit" class="upload-btn" value="Enviar">
         </form>
+        </div>
+        <!-- <form action="/upload" method="post" enctype="multipart/form-data"> -->
+            <!-- <input type="file" name="file" id="fileInput" accept=".pdf"> -->
+            <!-- <label for="fileInput" id="fileInputLabel">Selecione um processo</label> -->
+            <!-- <input type="submit" class="upload-btn" value="Anexar"> -->
+            <!-- <input type="hidden" name="numeroPaginas" value="{{ numeroPaginas }}"> -->
+        <!-- </form> -->
         <div class="titulos">
-            <h2>Referência do Processo: {{ resul_nproc }}</h2>
+            <h2>Referência do Processo: {{ numero_processo }}</h2>
             <hr>
 
             <div class="cabecalho">
                 <div class="brick">
-                    <p class="cabecalho-label">Autor:</p>
-                    <p class="cabecalho-valor">{{ resul_autor }}</p>
+                    <p class="cabecalho-label wd-col-label-1">Autor:</p>
+                    <p class="cabecalho-valor">{{ autor }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Réu:</p>
-                    <p class="cabecalho-valor">{{ resul_reu }}</p>
+                    <p class="cabecalho-valor">{{ reu }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Advogados Autor:</p>
-                    <p class="cabecalho-valor">{{ resul_advautor }}</p>
+                    <p class="cabecalho-valor">{{ advogado_autor }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Advogados Réu:</p>
-                    <p class="cabecalho-valor">{{ resul_advreu }}</p>
+                    <p class="cabecalho-valor">{{ advogado_reu }}</p>
                 </div>
             </div>
             <div class="cabecalho">
                 <div class="brick">
-                    <p class="cabecalho-label">Data Abertura:</p>
-                    <p class="cabecalho-valor">{{ resul_dtaber }}</p>
+                    <p class="cabecalho-label wd-col-label-1">Data Abertura:</p>
+                    <p class="cabecalho-valor">{{ data_abertura }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Ultima Atualização:</p>
-                    <p class="cabecalho-valor">{{ resul_dtatu }}</p>
+                    <p class="cabecalho-valor">{{ data_atualizacao }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Indenização:</p>
-                    <p class="cabecalho-valor">{{ resul_inden }}</p>
+                    <p class="cabecalho-valor">R$ {{ valor_indenizacao }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Produto:</p>
@@ -65,29 +73,29 @@
             </div>
             <div class="cabecalho">
                 <div class="brick">
-                    <p class="cabecalho-label">Status:</p>
-                    <p class="cabecalho-valor">{{ resul_status }}</p>
+                    <p class="cabecalho-label wd-col-label-1">Status:</p>
+                    <p class="cabecalho-valor">{{ status }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Vara:</p>
-                    <p class="cabecalho-valor">{{ resul_vara }}</p>
+                    <p class="cabecalho-valor">{{ vara }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Instância:</p>
-                    <p class="cabecalho-valor">{{ resul_inst }}</p>
+                    <p class="cabecalho-valor">{{ juizado }}</p>
                 </div>
                 <div class="brick">
                     <p class="cabecalho-label">Comarca:</p>
-                    <p class="cabecalho-valor">{{ resul_comar }}</p>
+                    <p class="cabecalho-valor">{{ comarca }}</p>
                 </div>
             </div>
             <div class="cabecalho-baixo">
                 <div class="brick">
-                    <p class="cabecalho-label">Juiz:</p>
-                    <p class="cabecalho-valor">{{ resul_juiz }}</p>
+                    <p class="cabecalho-label wd-col-label-1">Juiz:</p>
+                    <p class="cabecalho-valor wd-col-valor-1">{{ juiz }}</p>
                 </div>
                 <div class="brick-baixo">
-                    <p class="cabecalho-label">Tipo Reclamação:</p>
+                    <p class="cabecalho-label-baixo wd-col-baixo">Tipo Reclamação:</p>
                     <p class="cabecalho-valor-baixo">{{ tipoReclamacao }}</p>
                 </div>
             </div>
@@ -119,24 +127,27 @@
             </div>
         <hr>
         <div class="iaGenerativa">
-            <form action="/" method="post">
+            
+            <form action="/pergunta" method="post" id="pergunta">
                 <textarea name="texto" id="texto" cols="30" rows="10"></textarea><br>
-                <!-- <button type="submit">Enviar</button> -->
-            </form>
-
-            <div class="tamanhoSintese">
-                <P><strong>Síntese:</strong></p>
-                    <button class="btn-sintese">Curta</button>
-                    <button class="btn-sintese">Média</button>
-                    <button class="btn-sintese">Longa</button>
-            </div>
-            <div class="perguntaResumo">
+                <div class="tamanhoSintese">
+                    <P><strong>Síntese:</strong></p>
+                        <button class="btn-sintese-active" id="respostaCurta" value="100">Curta</button>
+                        <button class="btn-sintese-active" id="respostaMedia" value="250">Média</button>
+                        <button class="btn-sintese-active" id="respostaLonga" value="500">Longa</button>
+                </div>
                 <button id="perguntar">Perguntar</button>
-                <button id="resumir">Resumir</button>
-            </div>
+            </form>
+            
+                <div class="perguntaResumo">
+                    <form action="/resumo" method="post" id="uploadForm3">
+                        <button id="resumir">Resumir</button>
+                    </form>
+                </div>
+
         </div>
         <div class="respostaIa">
-            <div hidden id="resumoProcesso">{{ sintese }}</div>
+            <div hidden id="resumoProcesso"><strong>{{ pergunta }}</strong><br> <br> {{ resumo }}</div>
             <div id="typed-text-container" class="typed-text"></div>
             
             <!-- <div class="textoContainer"> -->
@@ -144,8 +155,7 @@
             </div>
         </div>
         <div class="precicaoIA">
-            <p><strong>Acurácia {{ acuracia }}</strong></p>
-            
+            <p hidden><strong>Acurácia {{ acuracia }}</strong></p>
             <div class="satisfacao">
             <p><strong>Satisfação:</strong></p>
             <button id="likeBtn" onclick="toggleLike()" class="active"><img id="likeImg" src="/static/assets/like.png" alt="Like"></button>

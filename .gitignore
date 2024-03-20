@@ -1,0 +1,17 @@
+# Arquivos gerados durante a execução do projeto
+__pycache__/
+*.pyc
+
+# Ambientes virtuais
+venv/
+env/
+
+# Arquivos de configuração locais
+config.py
+
+# Arquivos de log
+*.log
+
+# Outros arquivos e diretórios específicos para o seu projeto
+240319_EGR_IAGen_Consult.py
+240309_EGR_IAGen_Juridical_Process.py

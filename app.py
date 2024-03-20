@@ -1,69 +1,319 @@
-from flask import Flask, render_template, request
+from openai import OpenAI
+import time
+import sqlite3
+from flask import Flask, request, render_template, redirect, url_for
 from PyPDF2 import PdfReader
+from config import API_KEY
 
+#Inicialização do flask
 app = Flask(__name__)
 
-#var_1
-refProcesso = "1106-85.2016.8.10.0097"
+# Configuração do cliente OpenAI
+client = OpenAI(api_key = API_KEY)
 
 
-#var_2 
-juiz = "Des.Fed. Cecilia Mello" 
-#var_3
-autor = "Carlos Daniel Barcelos Ferreira"
-#var_4
-reu = "Banco Bradesco S/A"
-#var_5 
-advogadosAutor = "Roberto Borralho Junior"
-#var_6
-advogadosReu = "Wilson Sales Belchior"
-#var_7 
-indenizacao = "R$ 1.000.000,00"
-#var_8
-instancia = "TJMA"
-#var_9
-comarca = "MA"
-#var_10
-vara = "Matinha"
-#var_11
-dataAbertura = "31/10/2016"
-#var_12
-ultimaAtualizacao = "12/03/2024"
-#var_13
-situacaoFinal = "Suspenso"
-#var_14
-produto = "Serviços"
-#var_15
-juizQuantidade = "31"
-#var_16
-clienteQuantidade = "2"
-#var_17
-tribunalQuantidade = "234"
-#var_18
-tipoReclamacao = "DIREITO CIVIL (899) - Obrigações (7681) - Espécies de Contratos (9580) - Sistema Financeiro da Habitação (4839) - Reajuste de Prestações (4842)"
+#'0052211-83.2020.8.06.0029 ' 61 páginas
+#'0022701-03.2020.8.05.0110' 94 páginas
+#'0001242-24.2021.8.05.0137' 120 páginas
+
+def gerar_resposta_consolidada(objetivo_final):
+    resposta = ''
+    stream = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": f"{objetivo_final}, considerando \n\n {resumo_partes} em no máximo {tamanho_resposta}. Imprima o resultado em HTML"}],
+        stream=True,
+    )
+    for chunk in stream:
+        if chunk.choices[0].delta.content is not None:
+            resposta += chunk.choices[0].delta.content
+    return resposta
+
+def get_name_from_page_count(page_count):
+    if page_count == 94:
+        return "0022701-03.2020.8.05.0110"
+    elif page_count == 61:
+        return "0052211-83.2020.8.06.0029 "
+    elif page_count == 120:
+        return "0001242-24.2021.8.05.0137"
+    else:
+        return "Processo inválido"
+
+num_processo = ""
 
 
-
-@app.route('/',  methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    numeroPaginas = 0
+    return render_template('index.html')
 
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return 'No file part'
+@app.route('/upload', methods=['POST'])
+def upload():
+    global num_processo
+
+    if 'pdf_file' not in request.files:
+        return "Nenhum arquivo PDF enviado"
+
+    pdf_file = request.files['pdf_file']
+    if pdf_file.filename == '':
+        return "Nenhum arquivo selecionado"
+
+    if pdf_file:
+        pdf_reader = PdfReader(pdf_file)
+        page_count = len(pdf_reader.pages)
+        num_processo = get_name_from_page_count(page_count)
+
         
-        file = request.files['file']
 
-        if file.filename == '':
-            return 'No selected file'
 
-        if file:
-            pdf_reader = PdfReader(file)
-            numeroPaginas = len(pdf_reader.pages)
+
+        pergunta = "Como as leis aplicáveis influenciam o caso?"
+        tamanho_resposta = "300"
+
+        # Conectar ao banco de dados
+        conn = sqlite3.connect('C:/Users/raul.oliveira.miran1/Downloads/database/dados_processos2.db')
+        cursor = conn.cursor()
+
+        # Definir o número do processo desejado
+        numero_processo_desejado = f"{num_processo}"
+
+        # Executar a consulta SQL para selecionar os dados da linha com o número do processo desejado
+        cursor.execute('''
+            SELECT * FROM Processos WHERE numero_processo = ?
+        ''', (numero_processo_desejado,))
+
+        # Recuperar o resultado da consulta
+        resultado = cursor.fetchone()
+
+        # Fechar a conexão
+        conn.close()
+
+        # Atribuir os valores a outras variáveis
+        numero_processo, autor, juiz, reu, advogado_autor, advogado_reu, valor_indenizacao, juizado, comarca, vara, data_abertura, data_atualizacao, status, sintese, acuracia, resumo_partes = resultado
+        
+        juizQuantidade = "N/A"
+        clienteQuantidade = "N/A"
+        tribunalQuantidade = "N/A"
+        produto = "Empréstimo"
+        tipoReclamacao = "Contratação indevida"
+
+        if num_processo == "0052211-83.2020.8.06.0029 ":
+
+            juiz = "Karla Cristina de Oliveira"
+            autor = "FRANCISCA ROMANA BEZERRA DA COSTA"
+            reu = "BANCO BRADESCO S.A"
+            advogado_autor = "Rangel Pereira Ribeiro"
+            advogado_reu = "FRANCISCO SAMPAIO DE MENEZES JUNIOR"
+            valor_indenizacao = "23.054,24"
+            juizado = "TJCE"
+            comarca = "TJCE"
+            data_abertura = "14/12/2020"
+            data_atualizacao = "10/11/2021"
+        elif num_processo == "0022701-03.2020.8.05.0110":
+            juiz = "Alexandre Lopes"
+            autor = "Delci Rodrigues Santana Silva"
+            reu = "Banco Bradesco Financiamento S A"
+            advogado_autor = "Davi Olinto Soares"
+            advogado_reu = "Fernando Augusto de Faria Corbo"
+            valor_indenizacao = "15.000,00"
+            juizado = "TJBA"
+            comarca = "TJBA"
+            data_abertura = "03/12/2020"
+            data_atualizacao = "28/07/2023"
+        else:  
+            juiz = "BERNARDO MARIO DANTAS LUBAMBO"
+            autor = "JORGE PEREIRA DA SILVA"
+            reu = "BANCO BRADESCO S.A"
+            advogado_autor = "EMILIO LOPES DA CRUZ"
+            advogado_reu = "FERNANDO AUGUSTO DE FARIA CORBO"
+            valor_indenizacao = "9.583,04"
+            juizado = "TJBA"
+            comarca = "TJBA"
+            data_abertura = "12/04/2021"
+            data_atualizacao = "18/04/2023"
+
+        return render_template('index.html', numero_processo=numero_processo, autor=autor, reu=reu, advogado_autor=advogado_autor, advogado_reu=advogado_reu, data_abertura=data_abertura, data_atualizacao=data_atualizacao, acuracia=acuracia, status=status, valor_indenizacao=valor_indenizacao, vara=vara, comarca=comarca, juizado=juizado, juiz=juiz, juizQuantidade=juizQuantidade, clienteQuantidade=clienteQuantidade, tribunalQuantidade=tribunalQuantidade, resumo_partes=resumo_partes, produto=produto, tipoReclamacao=tipoReclamacao)
+
+@app.route('/resumo', methods=['GET', 'POST'])
+def resumo():
+
+    global num_processo
+
+    pergunta = "Faça um resumo"
+    tamanho_resposta = "300"
+
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('C:/Users/raul.oliveira.miran1/Downloads/database/dados_processos.db')
+    cursor = conn.cursor()
+
+    # Definir o número do processo desejado
+    numero_processo_desejado = f"{num_processo}"
+
+    # Executar a consulta SQL para selecionar os dados da linha com o número do processo desejado
+    cursor.execute('''
+        SELECT * FROM Processos WHERE numero_processo = ?
+    ''', (numero_processo_desejado,))
+
+    # Recuperar o resultado da consulta
+    resultado = cursor.fetchone()
+
+    # Fechar a conexão
+    conn.close()
+
+    def gerar_resposta_consolidada(objetivo_final):
+        resposta = ''
+        stream = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": f"{objetivo_final}, considerando \n\n {resumo_partes} em no máximo {tamanho_resposta}. Imprima o resultado em HTML"}],
+            stream=True,
+        )
+        for chunk in stream:
+            if chunk.choices[0].delta.content is not None:
+                resposta += chunk.choices[0].delta.content
+        return resposta
+
+    # Atribuir os valores a outras variáveis
+    numero_processo, autor, juiz, reu, advogado_autor, advogado_reu, valor_indenizacao, juizado, comarca, vara, data_abertura, data_atualizacao, status, sintese, acuracia, resumo_partes = resultado
     
-    resumoProcesso = "Após uma investigação minuciosa do processo em questão, ficou evidente que o Banco Bradesco foi acionado devido a discrepâncias relacionadas às taxas de juros aplicadas no produto de financiamento de número 109292163523. Os requerentes alegam que as taxas estabelecidas foram inconsistentes com as condições originalmente acordadas, resultando em encargos financeiros excessivos e desproporcionais. A controvérsia em torno dessas taxas gerou um impasse significativo entre as partes envolvidas, levando à necessidade de uma análise mais aprofundada e, possivelmente, à resolução por meio de medidas legais ou de arbitragem. A complexidade e a sensibilidade deste assunto requerem uma abordagem cuidadosa para garantir uma resolução justa e equitativa para todas as partes afetadas."
-    
-    return render_template('index.html', refProcesso=refProcesso, juiz=juiz, autor=autor, reu=reu, advogadosAutor=advogadosAutor, advogadosReu=advogadosReu, indenizacao=indenizacao, instancia=instancia, comarca=comarca, vara=vara, dataAbertura=dataAbertura, ultimaAtualizacao=ultimaAtualizacao, situacaoFinal=situacaoFinal, produto=produto, juizQuantidade=juizQuantidade, clienteQuantidade=clienteQuantidade, tribunalQuantidade=tribunalQuantidade, tipoReclamacao=tipoReclamacao, resumoProcesso=resumoProcesso, numeroPaginas=numeroPaginas)
+    resumo= gerar_resposta_consolidada(pergunta)
 
+    juizQuantidade = "N/A"
+    clienteQuantidade = "N/A"
+    tribunalQuantidade = "N/A"
+    produto = "Empréstimo"
+    tipoReclamacao = "Contratação indevida"
+
+    if num_processo == "0052211-83.2020.8.06.0029 ":
+
+        juiz = "Karla Cristina de Oliveira"
+        autor = "FRANCISCA ROMANA BEZERRA DA COSTA"
+        reu = "BANCO BRADESCO S.A"
+        advogado_autor = "Rangel Pereira Ribeiro"
+        advogado_reu = "FRANCISCO SAMPAIO DE MENEZES JUNIOR"
+        valor_indenizacao = "23.054,24"
+        juizado = "TJCE"
+        comarca = "TJCE"
+        data_abertura = "14/12/2020"
+        data_atualizacao = "10/11/2021"
+    elif num_processo == "0022701-03.2020.8.05.0110":
+        juiz = "Alexandre Lopes"
+        autor = "Delci Rodrigues Santana Silva"
+        reu = "Banco Bradesco Financiamento S A"
+        advogado_autor = "Davi Olinto Soares"
+        advogado_reu = "Fernando Augusto de Faria Corbo"
+        valor_indenizacao = "15.000,00"
+        juizado = "TJBA"
+        comarca = "TJBA"
+        data_abertura = "03/12/2020"
+        data_atualizacao = "28/07/2023"
+    else:  
+        juiz = "BERNARDO MARIO DANTAS LUBAMBO"
+        autor = "JORGE PEREIRA DA SILVA"
+        reu = "BANCO BRADESCO S.A"
+        advogado_autor = "EMILIO LOPES DA CRUZ"
+        advogado_reu = "FERNANDO AUGUSTO DE FARIA CORBO"
+        valor_indenizacao = "9.583,04"
+        juizado = "TJBA"
+        comarca = "TJBA"
+        data_abertura = "12/04/2021"
+        data_atualizacao = "18/04/2023"
+
+    return render_template('index.html', numero_processo=numero_processo, autor=autor, reu=reu, advogado_autor=advogado_autor, advogado_reu=advogado_reu, data_abertura=data_abertura, data_atualizacao=data_atualizacao, acuracia=acuracia, status=status, valor_indenizacao=valor_indenizacao, vara=vara, comarca=comarca, juizado=juizado, juiz=juiz, juizQuantidade=juizQuantidade, clienteQuantidade=clienteQuantidade, tribunalQuantidade=tribunalQuantidade, resumo_partes=resumo_partes, produto=produto, tipoReclamacao=tipoReclamacao, resumo=resumo)
+
+@app.route('/pergunta', methods=['GET', 'POST'])
+def pergunta():
+
+    global num_processo
+
+    perguntaUser =""
+
+    perguntaUser = request.form['texto']
+    
+    pergunta = perguntaUser
+    tamanho_resposta = "300"
+
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('C:/Users/raul.oliveira.miran1/Downloads/database/dados_processos.db')
+    cursor = conn.cursor()
+
+    # Definir o número do processo desejado
+    numero_processo_desejado = f"{num_processo}"
+
+    # Executar a consulta SQL para selecionar os dados da linha com o número do processo desejado
+    cursor.execute('''
+        SELECT * FROM Processos WHERE numero_processo = ?
+    ''', (numero_processo_desejado,))
+
+    # Recuperar o resultado da consulta
+    resultado = cursor.fetchone()
+
+    # Fechar a conexão
+    conn.close()
+
+    def gerar_resposta_consolidada(objetivo_final):
+        resposta = ''
+        stream = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": f" Imprima o resultado em HTML, {objetivo_final}, considerando \n\n {resumo_partes} em no máximo {tamanho_resposta}."}],
+            stream=True,
+        )
+        for chunk in stream:
+            if chunk.choices[0].delta.content is not None:
+                resposta += chunk.choices[0].delta.content
+        return resposta
+
+    # Atribuir os valores a outras variáveis
+    numero_processo, autor, juiz, reu, advogado_autor, advogado_reu, valor_indenizacao, juizado, comarca, vara, data_abertura, data_atualizacao, status, sintese, acuracia, resumo_partes = resultado
+    
+    resumo= gerar_resposta_consolidada(pergunta)
+
+    print(pergunta)
+    print(resumo)
+
+    juizQuantidade = "N/A"
+    clienteQuantidade = "N/A"
+    tribunalQuantidade = "N/A"
+    produto = "Empréstimo"
+    tipoReclamacao = "Contratação indevida"
+
+    if num_processo == "0052211-83.2020.8.06.0029 ":
+
+        juiz = "Karla Cristina de Oliveira"
+        autor = "FRANCISCA ROMANA BEZERRA DA COSTA"
+        reu = "BANCO BRADESCO S.A"
+        advogado_autor = "Rangel Pereira Ribeiro"
+        advogado_reu = "FRANCISCO SAMPAIO DE MENEZES JUNIOR"
+        valor_indenizacao = "23.054,24"
+        juizado = "TJCE"
+        comarca = "TJCE"
+        data_abertura = "14/12/2020"
+        data_atualizacao = "10/11/2021"
+    elif num_processo == "0022701-03.2020.8.05.0110":
+        juiz = "Alexandre Lopes"
+        autor = "Delci Rodrigues Santana Silva"
+        reu = "Banco Bradesco Financiamento S A"
+        advogado_autor = "Davi Olinto Soares"
+        advogado_reu = "Fernando Augusto de Faria Corbo"
+        valor_indenizacao = "15.000,00"
+        juizado = "TJBA"
+        comarca = "TJBA"
+        data_abertura = "03/12/2020"
+        data_atualizacao = "28/07/2023"
+    else:  
+        juiz = "BERNARDO MARIO DANTAS LUBAMBO"
+        autor = "JORGE PEREIRA DA SILVA"
+        reu = "BANCO BRADESCO S.A"
+        advogado_autor = "EMILIO LOPES DA CRUZ"
+        advogado_reu = "FERNANDO AUGUSTO DE FARIA CORBO"
+        valor_indenizacao = "9.583,04"
+        juizado = "TJBA"
+        comarca = "TJBA"
+        data_abertura = "12/04/2021"
+        data_atualizacao = "18/04/2023"
+
+    return render_template('index.html', numero_processo=numero_processo, autor=autor, reu=reu, advogado_autor=advogado_autor, advogado_reu=advogado_reu, data_abertura=data_abertura, data_atualizacao=data_atualizacao, acuracia=acuracia, status=status, valor_indenizacao=valor_indenizacao, vara=vara, comarca=comarca, juizado=juizado, juiz=juiz, juizQuantidade=juizQuantidade, clienteQuantidade=clienteQuantidade, tribunalQuantidade=tribunalQuantidade, resumo_partes=resumo_partes, produto=produto, tipoReclamacao=tipoReclamacao, resumo=resumo, pergunta=pergunta)
 if __name__ == '__main__':
     app.run(debug=True)
+
+inicio_resumo = time.time()
+
+resumo= gerar_resposta_consolidada(pergunta)
+print(resumo)
