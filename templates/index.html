@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +8,33 @@
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <header class="header1">
-        <img src="{{ url_for('static', filename='assets/logoMS.png') }}" alt="MSSolutions" class="MSlogoHome" onclick="redirecionarParaHome()">
+        <img src="{{ url_for('static', filename='assets/logoMS.png') }}" alt="MSSolutions" class="MSlogoHome"
+            onclick="redirecionarParaHome()">
         <h1 class="a comprimentos">Olá Raul!</h1>
-        <button class="botaoHeader botaoSair botaoSairHeaderPrincipal botaoProCantoDireito" onclick="redirecionarParaLogin()">
-          <img src="{{ url_for('static', filename='assets/exitIcon.png') }}" alt="Descrição da Imagem" height="25px" width="25px">
-          SAIR
+        <button class="botaoHeader botaoSair botaoSairHeaderPrincipal botaoProCantoDireito"
+            onclick="redirecionarParaLogin()">
+            <img src="{{ url_for('static', filename='assets/exitIcon.png') }}" alt="Descrição da Imagem" height="25px"
+                width="25px">
+            SAIR
         </button>
     </header>
 
     <div class="card">
         <div style="background-color: white;">
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="pdf_file" id="fileInput" accept=".pdf" required hidden>
-            <label for="fileInput" id="fileInputLabel">Selecione um processo</label>
-            <input type="submit" class="upload-btn" value="Enviar">
-        </form>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="pdf_file" id="fileInput" accept=".pdf" required hidden>
+                <label for="fileInput" id="fileInputLabel">Selecione um processo</label>
+                <input type="submit" class="upload-btn" value="Enviar">
+            </form>
         </div>
         <!-- <form action="/upload" method="post" enctype="multipart/form-data"> -->
-            <!-- <input type="file" name="file" id="fileInput" accept=".pdf"> -->
-            <!-- <label for="fileInput" id="fileInputLabel">Selecione um processo</label> -->
-            <!-- <input type="submit" class="upload-btn" value="Anexar"> -->
-            <!-- <input type="hidden" name="numeroPaginas" value="{{ numeroPaginas }}"> -->
+        <!-- <input type="file" name="file" id="fileInput" accept=".pdf"> -->
+        <!-- <label for="fileInput" id="fileInputLabel">Selecione um processo</label> -->
+        <!-- <input type="submit" class="upload-btn" value="Anexar"> -->
+        <!-- <input type="hidden" name="numeroPaginas" value="{{ numeroPaginas }}"> -->
         <!-- </form> -->
         <div class="titulos">
             <h2>Referência do Processo: {{ numero_processo }}</h2>
@@ -100,7 +105,7 @@
                 </div>
             </div>
 
-<!--             
+            <!--             
             <div class="container">
             <div class="juiz"><p><strong>Juiz: </strong>{{ resul_juiz }}</p></div>
             <div class="autor"><p><strong>Autor:</strong> {{ resul_autor }}</p></div>
@@ -119,49 +124,58 @@
             <div class="ultimaAtualizacao"><p><strong>Última atualização:</strong> {{ resul_dtatu }}</p></div>
             <div class="tipoReclamacao"><p><strong>Tipo da reclamação:</strong> {{ tipoReclamacao }}</p></div>
             </div> -->
-        <hr>
+            <hr>
             <div class="dashboard">
-                <div class="juizQuantidade"><p><strong>Nº de casos Juiz</strong></p> {{ juizQuantidade }}</div>
-                <div class="clienteQuantidade"><p><strong>Nº de casos cliente</strong></p>  {{ clienteQuantidade }}</div>
-                <div class="contotribunalQuantidaderno"><p><strong>Nº de casos tribunal</strong></p> {{ tribunalQuantidade }}</div>
-            </div>
-        <hr>
-        <div class="iaGenerativa">
-            
-            <form action="/pergunta" method="post" id="pergunta">
-                <textarea name="texto" id="texto" cols="30" rows="10"></textarea><br>
-                <div class="tamanhoSintese">
-                    <P><strong>Síntese:</strong></p>
-                        <button class="btn-sintese-active" id="respostaCurta" value="100">Curta</button>
-                        <button class="btn-sintese-active" id="respostaMedia" value="250">Média</button>
-                        <button class="btn-sintese-active" id="respostaLonga" value="500">Longa</button>
+                <div class="juizQuantidade">
+                    <p><strong>Nº de casos Juiz</strong></p> {{ juizQuantidade }}
                 </div>
-                <button id="perguntar">Perguntar</button>
-            </form>
-            
+                <div class="clienteQuantidade">
+                    <p><strong>Nº de casos cliente</strong></p> {{ clienteQuantidade }}
+                </div>
+                <div class="contotribunalQuantidaderno">
+                    <p><strong>Nº de casos tribunal</strong></p> {{ tribunalQuantidade }}
+                </div>
+            </div>
+            <hr>
+            <div class="iaGenerativa">
+
+                <form action="/pergunta" method="post" id="pergunta">
+                    <textarea name="texto" id="texto" cols="30" rows="10"></textarea><br>
+                    <div class="tamanhoSintese">
+                        <p><strong>Síntese:</strong></p>
+                        <button id="respostaCurta" type="button" value="100">Curta</button>
+                        <button class="btn-sintese-active" id="respostaMedia" type="button" value="250">Média</button>
+                        <button id="respostaLonga" type="button" value="500">Longa</button>
+                    </div>
+                    <input type="hidden" id="valor" name="valor">
+                    <button type="submit" id="perguntar">Perguntar</button>
+                </form>
+
                 <div class="perguntaResumo">
                     <form action="/resumo" method="post" id="uploadForm3">
                         <button id="resumir">Resumir</button>
                     </form>
                 </div>
 
-        </div>
-        <div class="respostaIa">
-            <div hidden id="resumoProcesso"><strong>{{ pergunta }}</strong><br> <br> {{ resumo }}</div>
-            <div id="typed-text-container" class="typed-text"></div>
-            
-            <!-- <div class="textoContainer"> -->
+            </div>
+            <div class="respostaIa">
+                <div hidden id="resumoProcesso"><strong>{{ pergunta }}</strong><br> <br> {{ resumo }}</div>
+                <div id="typed-text-container" class="typed-text"></div>
+
+                <!-- <div class="textoContainer"> -->
                 <!-- <textarea name="" id="" cols="30" rows="10">{{resumoProcesso}}</textarea> -->
             </div>
         </div>
         <div class="precicaoIA">
             <p hidden><strong>Acurácia {{ acuracia }}</strong></p>
             <div class="satisfacao">
-            <p><strong>Satisfação:</strong></p>
-            <button id="likeBtn" onclick="toggleLike()" class="active"><img id="likeImg" src="/static/assets/like.png" alt="Like"></button>
-            <button id="dislikeBtn" onclick="toggleDislike()" class="active"><img id="dislikeImg" src="/static/assets/dislike.png" alt="Dislike"></button>
+                <p><strong>Satisfação:</strong></p>
+                <button id="likeBtn" onclick="toggleLike()" class="active"><img id="likeImg"
+                        src="/static/assets/like.png" alt="Like"></button>
+                <button id="dislikeBtn" onclick="toggleDislike()" class="active"><img id="dislikeImg"
+                        src="/static/assets/dislike.png" alt="Dislike"></button>
             </div>
-            
+
             <button id="geraDefesa">Gerar defesa</button>
             <button id="download">Download</button>
         </div>
@@ -169,4 +183,5 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>

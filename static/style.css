@@ -134,7 +134,7 @@ br{
 }
 
 .tamanhoSintese > button{
-    background-color: lightgray;
+    /* background-color: lightgray; */
     padding: 7px 12px;
     border: none;
     border-radius: 12px;
@@ -144,7 +144,7 @@ br{
     height: 30px;
     padding-left: 5px;
     padding-right: 5px;
-    color: #041f4c;
+    /* color: #041f4c; */
     font-weight: bold;
 }
 
