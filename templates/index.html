@@ -7,6 +7,8 @@
     <title>Solução de IA Jurídico</title>
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 </head>
 
 <body>
@@ -143,9 +145,9 @@
                     <textarea name="texto" id="texto" cols="30" rows="10"></textarea><br>
                     <div class="tamanhoSintese">
                         <p><strong>Síntese:</strong></p>
-                        <button id="respostaCurta" type="button" value="100">Curta</button>
-                        <button class="btn-sintese-active" id="respostaMedia" type="button" value="250">Média</button>
-                        <button id="respostaLonga" type="button" value="500">Longa</button>
+                        <button id="respostaCurta" type="button" name="tamanho_resposta" value="100">Curta</button>
+                        <button class="btn-sintese-active" id="respostaMedia" type="button" name="tamanho_resposta" value="250">Média</button>
+                        <button id="respostaLonga" type="button" name="tamanho_resposta" value="500">Longa</button>
                     </div>
                     <input type="hidden" id="valor" name="valor">
                     <button type="submit" id="perguntar">Perguntar</button>
@@ -182,6 +184,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

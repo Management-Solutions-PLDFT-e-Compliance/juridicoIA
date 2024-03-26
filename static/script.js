@@ -97,3 +97,15 @@ document.getElementById('respostaLonga').addEventListener('click', function() {
   document.getElementById('respostaMedia').classList.remove('btn-sintese-active');
   document.getElementById('respostaLonga').classList.add('btn-sintese-active');
 });
+
+const showLoading = function() {
+  Swal.fire({
+    title: 'Gerando resposta...',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+};
+
+document.getElementById('perguntar').addEventListener('click', showLoading);
