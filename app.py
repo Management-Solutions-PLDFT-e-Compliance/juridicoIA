@@ -133,28 +133,21 @@ def upload():
 def resumo():
 
     global num_processo
-
     pergunta = "Faça um resumo"
     tamanho_resposta = "300"
-
     # Conectar ao banco de dados
     conn = sqlite3.connect('C:/Users/raul.oliveira.miran1/Downloads/database/dados_processos.db')
     cursor = conn.cursor()
-
     # Definir o número do processo desejado
     numero_processo_desejado = f"{num_processo}"
-
     # Executar a consulta SQL para selecionar os dados da linha com o número do processo desejado
     cursor.execute('''
         SELECT * FROM Processos WHERE numero_processo = ?
     ''', (numero_processo_desejado,))
-
     # Recuperar o resultado da consulta
     resultado = cursor.fetchone()
-
     # Fechar a conexão
     conn.close()
-
     def gerar_resposta_consolidada(objetivo_final):
         resposta = ''
         stream = client.chat.completions.create(
@@ -166,46 +159,16 @@ def resumo():
             if chunk.choices[0].delta.content is not None:
                 resposta += chunk.choices[0].delta.content
         return resposta
-
-        if gerar_resposta_consolidada(objetivo_final) != "Vazio":
-            print("Resultado na base de dados:\n")
-            resumo = gerar_resposta_consolidada(pergunta)
-            print(resumo)
-        else:
-            print("Resposta vazia, refazendo processamento...")
-            ######## INICIO
-
-            # Leitura e divisão do PDF em partes
-            partes_pdf = ler_pdf_e_dividir(caminho_pdf)
-
-            #########################DEFINIR A PERGUNTA 1#########################
-            pergunta_int = f"{pergunta}, responda em no máximo{tamanho_respostas_int} palavras. Responda de forma curta e direta'"
-
-            # Extração da resposta combinada do modelo generativo
-            respostas_partes = analise_textos(pergunta_int, partes_pdf)
-
-            # Tokenização do resultado
-            respostas_concatenadas_1 = ''.join(respostas_partes)
-            respostas_tokenizadas_1 = tokenizar_respostas_com_spacy(respostas_concatenadas_1)
-            print(respostas_tokenizadas_1)
-            print("\n\n\n\n\n\n")
-
-            #DEFINIR A PERGUNTA CONSOLIDADA
-            pergunta_sintese = f"{pergunta}: procurar resposta em: {', '.join(respostas_tokenizadas_1)} em no máximo {tamanho_resposta_final} palavras. Indique, em %, qual a confiabilidade da resposta somente em números. Separe o valor da confiabilidade da sintese por |"
-
-            #GERAR RESUMO
-
-            resumo= gerar_resposta_consolidada_processamento(pergunta_sintese)
-            print(resumo)
-
     # Atribuir os valores a outras variáveis
     numero_processo, autor, juiz, reu, advogado_autor, advogado_reu, valor_indenizacao, juizado, comarca, vara, data_abertura, data_atualizacao, status, sintese, acuracia, resumo_partes = resultado
     
     resumo= gerar_resposta_consolidada(pergunta)
-
-
+    juizQuantidade = "N/A"
+    clienteQuantidade = "N/A"
+    tribunalQuantidade = "N/A"
+    produto = "Empréstimo"
+    tipoReclamacao = "Contratação indevida"
     if num_processo == "0052211-83.2020.8.06.0029 ":
-
         juiz = "Karla Cristina de Oliveira"
         autor = "FRANCISCA ROMANA BEZERRA DA COSTA"
         reu = "BANCO BRADESCO S.A"
@@ -238,33 +201,31 @@ def resumo():
         comarca = "TJBA"
         data_abertura = "12/04/2021"
         data_atualizacao = "18/04/2023"
-
     return render_template('index.html', numero_processo=numero_processo, autor=autor, reu=reu, advogado_autor=advogado_autor, advogado_reu=advogado_reu, data_abertura=data_abertura, data_atualizacao=data_atualizacao, acuracia=acuracia, status=status, valor_indenizacao=valor_indenizacao, vara=vara, comarca=comarca, juizado=juizado, juiz=juiz, juizQuantidade=juizQuantidade, clienteQuantidade=clienteQuantidade, tribunalQuantidade=tribunalQuantidade, resumo_partes=resumo_partes, produto=produto, tipoReclamacao=tipoReclamacao, resumo=resumo)
-
 @app.route('/pergunta', methods=['GET', 'POST'])
 def pergunta():
 
     global num_processo
-
     resumo = ""
     perguntaUser =""
-    tamanhoUser = ""
 
     perguntaUser = request.form['texto']
-    tamanhoUser = request.form['valor']
+    tamanho = request.form['valor']
     
-    print(perguntaUser, tamanhoUser)
-
     pergunta = perguntaUser
-    tamanho_resposta = "60"
+    tamanho_resposta = tamanho
+    #tamanho_resposta = int(request.form['tamanho_resposta'])
     bases = 'C:/Users/raul.oliveira.miran1/Downloads/database/'
     arquivo = '61pag.pdf'
     caminho_pdf = bases + arquivo
     num_processo = "0022701-03.2020.8.05.0110"
-    tamanho_resposta_final = 10
+    #tamanho_resposta_final = 100
+    tamanho_resposta_final = tamanho_resposta
+    #tamanho_resposta_final = request.form['tamanho_resposta']
+    print(tamanho_resposta_final)
     tamanho_respostas_int = tamanho_resposta_final*2
 
-    # Carregar o modelo de língua portuguesa do spaCy
+    # Carregar o modelo de língua portuguesa do spaCy hhh
     nlp = spacy.load("pt_core_news_sm")
 
     # Conectar ao banco de dados
@@ -349,7 +310,7 @@ def pergunta():
         resposta = ''
         stream = client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "user", "content":f"{objetivo_final}, considerando \n\n {resumo_partes} em no máximo {tamanho_resposta}. Se não for possível encontrar a resposta, retorne a palavra 'Vazio'"}],
+            messages=[{"role": "user", "content":f"{objetivo_final}, considerando \n\n {resumo_partes} em no máximo {tamanho_resposta} caracteres. Se não for possível encontrar a resposta, retorne a palavra 'Vazio'"}],
             stream=True,
         )
         for chunk in stream:
@@ -393,12 +354,6 @@ def pergunta():
     
         print("\n\nResumo:"+resumo)
 
-        juizQuantidade = "N/A"
-        clienteQuantidade = "N/A"
-        tribunalQuantidade = "N/A"
-        produto = "Empréstimo"
-        tipoReclamacao = "Contratação indevida"
-
         if num_processo == "0052211-83.2020.8.06.0029 ":
 
             juiz = "Karla Cristina de Oliveira"
@@ -433,6 +388,7 @@ def pergunta():
             tribunalQuantidade = "N/A"
             produto = "Empréstimo"
             tipoReclamacao = "Contratação indevida"
+
         else:  
             juiz = "BERNARDO MARIO DANTAS LUBAMBO"
             autor = "JORGE PEREIRA DA SILVA"
