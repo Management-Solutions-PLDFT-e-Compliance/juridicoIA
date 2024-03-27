@@ -109,3 +109,4 @@ const showLoading = function() {
 };
 
 document.getElementById('perguntar').addEventListener('click', showLoading);
+document.getElementById('resumir').addEventListener('click', showLoading);
